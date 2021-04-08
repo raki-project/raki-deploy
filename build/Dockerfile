@@ -56,7 +56,7 @@ RUN apt-get update -qq && \
 	maven \
 	&& rm -rf /var/lib/apt/lists/*
 
-# COPY m2repository m2repository
+COPY m2repository m2repository
 COPY --from=cloner /raki-verbalizer raki-verbalizer
 COPY --from=cloner /raki-verbalizer-pipeline raki-verbalizer-pipeline
 COPY --from=cloner /raki-verbalizer-webapp ./
