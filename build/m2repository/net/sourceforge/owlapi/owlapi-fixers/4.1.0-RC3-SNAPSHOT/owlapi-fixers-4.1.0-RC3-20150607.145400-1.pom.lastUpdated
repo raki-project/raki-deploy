@@ -1,0 +1,13 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Apr 08 05:18:48 CEST 2021
+https\://repo1.maven.org/maven2/.lastUpdated=1617851924946
+https\://maven.aksw.org/archiva/repository/internal/.lastUpdated=1617851927138
+https\://maven.aksw.org/archiva/repository/internal/.error=
+http\://dev.davidsoergel.com/nexus/content/repositories/releases/.error=Could not transfer artifact net.sourceforge.owlapi\:owlapi-fixers\:pom\:4.1.0-RC3-20150607.145400-1 from/to davidsoergel.releases (http\://dev.davidsoergel.com/nexus/content/repositories/releases)\: Failed to transfer file\: http\://dev.davidsoergel.com/nexus/content/repositories/releases/net/sourceforge/owlapi/owlapi-fixers/4.1.0-RC3-SNAPSHOT/owlapi-fixers-4.1.0-RC3-20150607.145400-1.pom. Return code is\: 503 , ReasonPhrase\:Service Unavailable.
+@default-davidsoergel.releases-http\://dev.davidsoergel.com/nexus/content/repositories/releases/.lastUpdated=1617851928562
+https\://maven.aksw.org/archiva/repository/snapshots/.lastUpdated=1617851928228
+https\://oss.sonatype.org/content/repositories/snapshots/.lastUpdated=1617851928800
+https\://maven.aksw.org/archiva/repository/snapshots/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1617851926063
+https\://repo.maven.apache.org/maven2/.error=
+https\://repo1.maven.org/maven2/.error=

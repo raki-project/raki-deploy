@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Apr 08 05:23:15 CEST 2021
+stanford-corenlp-3.9.2.jar>Apache\ Repo\ Central\ 1=
+stanford-corenlp-3.9.2.pom>Apache\ Repo\ Central\ 1=
+stanford-corenlp-3.9.2-models.jar>Apache\ Repo\ Central\ 1=
