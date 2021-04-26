@@ -44,8 +44,13 @@ RUN git clone --branch master \
   ssh://git@github.com/raki-project/raki-verbalizer-webapp.git \
   raki-verbalizer-webapp
 
-FROM openjdk:8-jdk AS builder
-
+RUN git clone --branch master \
+  https://github.com/OpenNMT/OpenNMT-py.git \
+  OpenNMT
+RUN cd OpenNMT && git checkout 585499a4
+#
+#
+FROM ubuntu:latest AS builder
 RUN mkdir -p /usr/bin/raki-verbalizer-webapp
 WORKDIR /usr/bin/raki-verbalizer-webapp
 
@@ -53,6 +58,10 @@ ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki-verbalizer-webapp/m2repo
 
 RUN apt-get update -qq && \
   apt-get install -y --no-install-recommends \
+	python3-pip \
+	python3-setuptools \
+	build-essential \
+	apt-utils \
 	maven \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -60,6 +69,8 @@ COPY m2repository m2repository
 COPY --from=cloner /raki-verbalizer raki-verbalizer
 COPY --from=cloner /raki-verbalizer-pipeline raki-verbalizer-pipeline
 COPY --from=cloner /raki-verbalizer-webapp ./
+COPY demo demo
+# COPY requirements.txt requirements.txt
 
 EXPOSE 4443
 
@@ -70,6 +81,21 @@ RUN ./mavenCompile.sh
 RUN rm -rf raki-verbalizer 
 RUN rm -rf raki-verbalizer-pipeline 
 
-RUN bash -c 'ls -la'
+#RUN pip3 install -r requirements.txt
+RUN pip3 install wheel
+RUN pip3 install future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==0.1.95 torchtext==0.5.0
+COPY --from=cloner OpenNMT OpenNMT
+RUN cd OpenNMT && pip3 install -e .
+
+#
+# Test
+#
+# RUN cd OpenNMT && python3 translate.py \
+#		-model /usr/bin/raki-verbalizer-webapp/demo/model_step_1000.pt \
+#		-src /usr/bin/raki-verbalizer-webapp/demo/suramin_5k.owl.json.src.test.txt  \
+#		-output /usr/bin/raki-verbalizer-webapp/demo/pred.txt \
+#		-replace_unk \
+#		-verbose \
+#		-beam_size 5
 
 ENTRYPOINT ["mvn","exec:java","-Dmaven.repo.local=/usr/bin/raki-verbalizer-webapp/m2repository","-Dexec.mainClass=org.dice_research.raki.verbalizer.webapp.ServiceApp"]
