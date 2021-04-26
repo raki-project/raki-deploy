@@ -5,7 +5,6 @@ key_content3=$(cat $KEY3_PATH)
 docker build \
          --progress=plain \
          --rm -t raki-verbalizer-webapp \
-         --no-cache \
          --build-arg \
          KEY_VERBALIZER="${key_content1}" \
          --build-arg \
