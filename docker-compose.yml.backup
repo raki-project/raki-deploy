@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  drill:
+    build: .
+    image: drill:latest
+    ports:
+      - "9080:9080"
+
+  verb:
+    build: .
+    image: raki-verbalizer-webapp:latest
+    ports:
+      - "9081:9081"
+    volumes:
+      - OntoPy:/usr/bin/raki-verbalizer-webapp/OntoPy
+      
+volumes:
+  OntoPy:
