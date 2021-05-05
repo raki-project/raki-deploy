@@ -42,11 +42,11 @@ RUN git clone --branch master \
 	cd OpenNMT && \
 	git checkout 585499a4
 
-ARG SSH_PRIVATE_KEY
-RUN eval $(ssh-agent) && \
-    echo "${SSH_PRIVATE_KEY}" | ssh-add - && \
-    ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts && \
-    git clone git@github.com:dice-group/OntoPy.git -b master
+#ARG SSH_PRIVATE_KEY
+#RUN eval $(ssh-agent) && \
+#    echo "${SSH_PRIVATE_KEY}" | ssh-add - && \
+#    ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts && \
+#    git clone git@github.com:dice-group/OntoPy.git -b master
 
 RUN echo "${KEY_WEBAPP}" > /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/id_rsa
@@ -82,7 +82,7 @@ RUN unzip m2repository.zip
 COPY --from=cloner /raki-verbalizer raki-verbalizer
 COPY --from=cloner /raki-verbalizer-pipeline raki-verbalizer-pipeline
 COPY --from=cloner /raki-verbalizer-webapp ./
-COPY --from=cloner /OntoPy OntoPy
+#COPY --from=cloner /OntoPy OntoPy
 
 EXPOSE 9081
 
@@ -97,7 +97,5 @@ RUN rm -rf m2repository.zip
 RUN pip3 install wheel future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==0.1.95 torchtext==0.5.0
 COPY --from=cloner OpenNMT OpenNMT
 RUN cd OpenNMT && pip3 install -e .
-
-COPY --from=cloner /OntoPy OntoPy/OntoPy
 
 ENTRYPOINT ["mvn","exec:java","-Dmaven.repo.local=/usr/bin/raki-verbalizer-webapp/m2repository","-Dexec.mainClass=org.dice_research.raki.verbalizer.webapp.ServiceApp"]
