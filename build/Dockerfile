@@ -24,7 +24,7 @@ RUN echo "${KEY_VERBALIZER}" > /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/id_rsa
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
-RUN git clone --branch dev_owl2nl \
+RUN git clone --branch v1 \
   ssh://git@github.com/raki-project/raki-verbalizer.git  \
   raki-verbalizer
 
@@ -34,7 +34,19 @@ RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 RUN git clone --branch main \
   ssh://git@github.com/raki-project/raki-verbalizer-pipeline.git \
-  raki-verbalizer-pipeline
+  raki-verbalizer-pipeline 
+
+RUN git clone --branch master \
+  https://github.com/OpenNMT/OpenNMT-py.git \
+  OpenNMT && \
+	cd OpenNMT && \
+	git checkout 585499a4
+
+ARG SSH_PRIVATE_KEY
+RUN eval $(ssh-agent) && \
+    echo "${SSH_PRIVATE_KEY}" | ssh-add - && \
+    ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts && \
+    git clone git@github.com:dice-group/OntoPy.git -b master
 
 RUN echo "${KEY_WEBAPP}" > /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/id_rsa
@@ -42,19 +54,14 @@ RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 RUN git clone --branch master \
   ssh://git@github.com/raki-project/raki-verbalizer-webapp.git \
-  raki-verbalizer-webapp
+  raki-verbalizer-webapp	&& cd  raki-verbalizer-webapp 
 
-RUN git clone --branch master \
-  https://github.com/OpenNMT/OpenNMT-py.git \
-  OpenNMT
-RUN cd OpenNMT && git checkout 585499a4
-#
-#
 FROM ubuntu:latest AS builder
+
 RUN mkdir -p /usr/bin/raki-verbalizer-webapp
 WORKDIR /usr/bin/raki-verbalizer-webapp
 
-ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki-verbalizer-webapp/m2repository"
+#WORKDIR /OntoPy
 
 RUN apt-get update -qq && \
   apt-get install -y --no-install-recommends \
@@ -63,16 +70,21 @@ RUN apt-get update -qq && \
 	build-essential \
 	apt-utils \
 	maven \
+	wget \
+	unzip \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY m2repository m2repository
+ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki-verbalizer-webapp/m2repository"
+RUN mkdir demo && cd demo && wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/model_step_1000.pt
+RUN wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/m2repository.zip
+RUN unzip m2repository.zip
+
 COPY --from=cloner /raki-verbalizer raki-verbalizer
 COPY --from=cloner /raki-verbalizer-pipeline raki-verbalizer-pipeline
 COPY --from=cloner /raki-verbalizer-webapp ./
-COPY demo demo
-# COPY requirements.txt requirements.txt
+COPY --from=cloner /OntoPy OntoPy
 
-EXPOSE 4443
+EXPOSE 9081
 
 RUN cd raki-verbalizer && ./mavenCompile.sh && ./mavenInstall.sh 
 RUN cd raki-verbalizer-pipeline && ./mavenCompile.sh && ./mavenInstall.sh 
@@ -80,22 +92,12 @@ RUN ./mavenCompile.sh
 
 RUN rm -rf raki-verbalizer 
 RUN rm -rf raki-verbalizer-pipeline 
+RUN rm -rf m2repository.zip
 
-#RUN pip3 install -r requirements.txt
-RUN pip3 install wheel
-RUN pip3 install future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==0.1.95 torchtext==0.5.0
+RUN pip3 install wheel future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==0.1.95 torchtext==0.5.0
 COPY --from=cloner OpenNMT OpenNMT
 RUN cd OpenNMT && pip3 install -e .
 
-#
-# Test
-#
-# RUN cd OpenNMT && python3 translate.py \
-#		-model /usr/bin/raki-verbalizer-webapp/demo/model_step_1000.pt \
-#		-src /usr/bin/raki-verbalizer-webapp/demo/suramin_5k.owl.json.src.test.txt  \
-#		-output /usr/bin/raki-verbalizer-webapp/demo/pred.txt \
-#		-replace_unk \
-#		-verbose \
-#		-beam_size 5
+COPY --from=cloner /OntoPy OntoPy/OntoPy
 
 ENTRYPOINT ["mvn","exec:java","-Dmaven.repo.local=/usr/bin/raki-verbalizer-webapp/m2repository","-Dexec.mainClass=org.dice_research.raki.verbalizer.webapp.ServiceApp"]
