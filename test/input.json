@@ -1,0 +1,24 @@
+{
+  "positives": [
+    "http://www.biopax.org/examples/glycolysis#pathwayStep204",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep307",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep171",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep107",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep306",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep82",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep54",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep309",
+    "http://www.biopax.org/examples/glycolysis#pathwayStep320"
+  ],
+  "negatives": [
+    "http://www.biopax.org/examples/glycolysis#physicalEntityParticipant177",
+    "http://www.biopax.org/examples/glycolysis#smallMolecule106",
+    "http://www.biopax.org/examples/glycolysis#dataSource319",
+    "http://www.biopax.org/examples/glycolysis#physicalEntityParticipant154",
+    "http://www.biopax.org/examples/glycolysis#relationshipXref266",
+    "http://www.biopax.org/examples/glycolysis#physicalEntityParticipant71",
+    "http://www.biopax.org/examples/glycolysis#modulation308",
+    "http://www.biopax.org/examples/glycolysis#physicalEntityParticipant180",
+    "http://www.biopax.org/examples/glycolysis#chemicalStructure32"
+  ]
+}
