@@ -9,8 +9,7 @@ Follow  the documentation in
 
 ## Build the Verbalizer Docker image
 
-Run the script: `build.sh`.
-The name of the image will be `raki-verbalizer-webapp`.
+Run: `docker build -t raki-verbalizer-webapp:latest "."`.
 
 # Start
 
@@ -35,3 +34,5 @@ curl \
 	-o $response \
 	http://localhost:9081/raki
 ```
+
+By default the rule-based version is used. The parameter `type` with the value `model` will use the trained network in the beta version (e.g., `http://localhost:9081/raki?type=model`).  
