@@ -12,7 +12,7 @@ RUN apt-get update -qq && \
   git \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN git clone --branch v1 \
+RUN git clone --branch master \
   https://github.com/raki-project/raki-verbalizer.git  \
   raki-verbalizer
 
