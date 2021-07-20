@@ -9,8 +9,7 @@ Follow  the documentation in
 
 ## Build the Verbalizer Docker image
 
-Run the script: `build.sh`.
-The name of the image will be `raki-verbalizer-webapp`.
+Run: `docker build -t raki-verbalizer-webapp:latest "."`.
 
 # Start
 
@@ -19,7 +18,7 @@ Start the application by running: `docker-compose up`.
 # Example request
 
 A request has two parameters.
-One with an input file (e.g., `input.json`) that contains an input for Drill as described in [Drill][1] and name the image `drill`.
+One with an input file (e.g., `input.json`) that contains an input for Drill as described in [Drill][1] 
 and another parameter with a file (e.g., `ontology.owl`) that contains an ontology, for instance `biopax.owl`.
 
 Request example with Curl:
@@ -35,3 +34,5 @@ curl \
 	-o $response \
 	http://localhost:9081/raki
 ```
+
+By default the rule-based version is used. The parameter `type` with the value `model` will use the trained network in the beta version (e.g., `http://localhost:9081/raki?type=model`).  
