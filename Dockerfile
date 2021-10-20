@@ -26,8 +26,8 @@ RUN locale-gen en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 
-ENV TZ=Europe/Berlin
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# ENV TZ=Europe/Berlin
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN git clone --branch master \
   https://github.com/OpenNMT/OpenNMT-py.git \
@@ -37,9 +37,9 @@ RUN git clone --branch master \
 RUN cd OpenNMT && pip3 install -e .	
 
 RUN wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/m2.zip
-RUN wget https://hobbitdata.informatik.uni-leipzig.de/LD2NL/NIHLexicon.zip
+# RUN wget https://hobbitdata.informatik.uni-leipzig.de/LD2NL/NIHLexicon.zip
 RUN unzip m2.zip && rm m2.zip
-RUN unzip NIHLexicon.zip  && rm NIHLexicon.zip
+# RUN unzip NIHLexicon.zip  && rm NIHLexicon.zip
 
 RUN echo \
     "<settings xmlns='http://maven.apache.org/SETTINGS/1.0.0\' \
