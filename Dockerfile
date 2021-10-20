@@ -66,7 +66,7 @@ RUN git clone --branch master \
  https://github.com/raki-project/raki-verbalizer-webapp.git \
   raki-verbalizer-webapp
 
-RUN mv NIHLexicon raki-verbalizer/SPARQL2NL/src/main/resources/
+# RUN mv NIHLexicon raki-verbalizer/SPARQL2NL/src/main/resources/
 
 # FROM 3.8.1-openjdk-8
 
