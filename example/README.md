@@ -1,2 +1,2 @@
-Copy `KGs` from `Ontolearn`.
-Copy `LPs` from `Ontolearn`.
+Copy `KGs` and `LPs` folder from `Ontolearn`.
+
