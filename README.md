@@ -18,12 +18,25 @@ Start the application by running: `docker-compose up`.
 # Example request
 
 A request has two parameters.
-One with an input file (e.g., `input.json`) that contains an input for Drill as described in [Drill][1] 
-and another parameter with a file (e.g., `ontology.owl`) that contains an ontology, for instance `biopax.owl`.
+One with an input file (e.g., `input.json`) that contains an input for Drill as described in [Drill][1]
+and another parameter with a file (e.g., `biopax.owl`) that contains an ontology.
+
+An input can be created with, for instance:
+```bash
+jq '
+   .problems
+     ."((pathwayStep ⊓ (∀INTERACTION-TYPE.Thing)) ⊔ (sequenceInterval ⊓ (∀ID-VERSION.Thing)))"
+   | {
+      "positives": .positive_examples,
+      "negatives": .negative_examples
+     }' LPs/Biopax/lp.json > input.json
+
+```
+The files in the `LPs` folder are given in [Drill][1].
 
 Request example with Curl:
 ```bash
-ontology="@ontology.owl"
+ontology="@biopax.owl"
 input="@input.json"
 response=$0.json
 
