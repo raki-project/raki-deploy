@@ -10,6 +10,6 @@ services:
 
   verb:
     build: .
-    image: raki-verbalizer-webapp:latest
+    image: raki-webapp:latest
     ports:
       - "9081:9081"
