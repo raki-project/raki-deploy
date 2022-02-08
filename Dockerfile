@@ -1,4 +1,4 @@
-FROM ubuntu 
+FROM ubuntu
 
 MAINTAINER R. Speck <rene.speck@uni-leipzig.de>
 
@@ -25,21 +25,15 @@ RUN pip3 install wheel future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
-
-# ENV TZ=Europe/Berlin
-# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
 RUN git clone --branch master \
   https://github.com/OpenNMT/OpenNMT-py.git \
   OpenNMT && \
 	cd OpenNMT && \
 	git checkout 585499a4
-RUN cd OpenNMT && pip3 install -e .	
-
-RUN wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/m2.zip
-# RUN wget https://hobbitdata.informatik.uni-leipzig.de/LD2NL/NIHLexicon.zip
-RUN unzip m2.zip && rm m2.zip
-# RUN unzip NIHLexicon.zip  && rm NIHLexicon.zip
+RUN cd OpenNMT && pip3 install -e .
+#
+RUN wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/m2_20220208.zip
+RUN unzip m2_20220208.zip && rm m2_20220208.zip
 
 RUN echo \
     "<settings xmlns='http://maven.apache.org/SETTINGS/1.0.0\' \
@@ -54,34 +48,31 @@ RUN echo \
 
 RUN mkdir demo && cd demo && wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/model_step_1000.pt
 
-RUN git clone --branch master \
+RUN git clone --branch v1 \
   https://github.com/raki-project/raki-verbalizer.git  \
   raki-verbalizer
 
-RUN git clone --branch main \
+RUN git clone --branch v1 \
   https://github.com/raki-project/raki-verbalizer-pipeline.git \
-  raki-verbalizer-pipeline 
+  raki-verbalizer-pipeline
 
-RUN git clone --branch master \
- https://github.com/raki-project/raki-verbalizer-webapp.git \
-  raki-verbalizer-webapp
-
-# RUN mv NIHLexicon raki-verbalizer/SPARQL2NL/src/main/resources/
+RUN git clone --branch v1 \
+ https://github.com/raki-project/raki-webapp.git \
+  raki-webapp
 
 # FROM 3.8.1-openjdk-8
 
 RUN cd raki-verbalizer && ./mavenInstall.sh
 RUN cd raki-verbalizer-pipeline && ./mavenInstall.sh
-RUN cd raki-verbalizer-webapp && ./mavenCompile.sh
+RUN cd raki-webapp && ./mavenCompile.sh
 
-RUN rm -rf raki-verbalizer 
-RUN rm -rf raki-verbalizer-pipeline 
+RUN rm -rf raki-verbalizer
+RUN rm -rf raki-verbalizer-pipeline
 
-WORKDIR /usr/bin/raki/raki-verbalizer-webapp
+WORKDIR /usr/bin/raki/raki-webapp
 
 EXPOSE 9081
 
 ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki/.m2/repository"
 
 ENTRYPOINT ["mvn","exec:java","-Dmaven.repo.local=/usr/bin/raki/.m2/repository","-Dexec.mainClass=org.dice_research.raki.verbalizer.webapp.ServiceApp"]
-
