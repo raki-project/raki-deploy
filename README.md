@@ -9,7 +9,7 @@ Follow  the documentation in
 
 ## Build the Verbalizer Docker image
 
-Run: `docker build -t raki-verbalizer-webapp:latest "."`.
+Run: `docker build -t raki-webapp:latest "."`.
 
 # Start
 
