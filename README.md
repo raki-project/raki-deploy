@@ -1,7 +1,7 @@
 [1]: https://github.com/dice-group/RAKI-Drill-Endpoint
 
 # Deploy
-
+<!---
 ## Build the DRILL Docker image
 
 Follow  the documentation in
@@ -12,6 +12,7 @@ Follow  the documentation in
 Run: `docker build -t raki-webapp:latest "."`.
 
 # Start
+-->
 
 Start the application by running: `docker-compose up`.
 

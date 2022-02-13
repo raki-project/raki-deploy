@@ -25,6 +25,10 @@ RUN pip3 install wheel future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
+RUN git clone --branch v1 \
+ https://github.com/raki-project/raki-webapp.git \
+  .
+
 RUN git clone --branch master \
   https://github.com/OpenNMT/OpenNMT-py.git \
   OpenNMT && \
@@ -56,20 +60,11 @@ RUN git clone --branch v1 \
   https://github.com/raki-project/raki-verbalizer-pipeline.git \
   raki-verbalizer-pipeline
 
-RUN git clone --branch v1 \
- https://github.com/raki-project/raki-webapp.git \
-  raki-webapp
+RUN cd raki-verbalizer && ./mavenInstall.sh && cd .. && rm -rf raki-verbalizer \
+ && cd raki-verbalizer-pipeline && ./mavenInstall.sh  && cd .. && rm -rf raki-verbalizer-pipeline \
+ && ./mavenCompile.sh
 
-# FROM 3.8.1-openjdk-8
-
-RUN cd raki-verbalizer && ./mavenInstall.sh
-RUN cd raki-verbalizer-pipeline && ./mavenInstall.sh
-RUN cd raki-webapp && ./mavenCompile.sh
-
-RUN rm -rf raki-verbalizer
-RUN rm -rf raki-verbalizer-pipeline
-
-WORKDIR /usr/bin/raki/raki-webapp
+# RUN echo "$(ls -sha)"
 
 EXPOSE 9081
 
