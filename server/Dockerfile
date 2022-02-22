@@ -25,7 +25,7 @@ RUN pip3 install wheel future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
-RUN git clone --branch v1 \
+RUN git clone --branch v2 \
  https://github.com/raki-project/raki-webapp.git \
   .
 
@@ -52,11 +52,11 @@ RUN echo \
 
 RUN mkdir demo && cd demo && wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/model_step_1000.pt
 
-RUN git clone --branch v1 \
+RUN git clone --branch v2 \
   https://github.com/raki-project/raki-verbalizer.git  \
   raki-verbalizer
 
-RUN git clone --branch v1 \
+RUN git clone --branch v2 \
   https://github.com/raki-project/raki-verbalizer-pipeline.git \
   raki-verbalizer-pipeline
 
