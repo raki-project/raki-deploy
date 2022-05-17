@@ -1,7 +1,7 @@
 #
 #
 #
-FROM ubuntu AS data
+FROM ubuntu:20.04 AS data
 
 MAINTAINER R. Speck <rene.speck@uni-leipzig.de>
 ENV DEBIAN_FRONTEND noninteractive
@@ -22,8 +22,11 @@ RUN apt-get update -qq && \
 	locales \
   git \
   nodejs npm \
-	&& rm -rf /var/lib/apt/lists/* \
-  && pip3 install wheel future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==0.1.95 torchtext==0.5.0
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update -qq && \
+  apt-get install -y -q --no-install-recommends \
+	&& pip3 install wheel future==0.18.2 numpy==1.20.2 torch==1.6.0 sentencepiece==0.1.95 torchtext==0.5.0
 
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
