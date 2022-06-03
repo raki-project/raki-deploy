@@ -2,11 +2,15 @@ version: "3.9"
 
 services:
   drill:
-    build: drill
+    build:
+      context: drill
+    environment:
+      - KG=Biopax/biopax.owl
+      - EMBEDDINGS=ConEx_Biopax/ConEx_entity_embeddings.csv
+      - PRE_TRAINED_AGENT=Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth
     image: drill:latest
     ports:
       - "9080:9080"
-
 
   verb:
     build: server
