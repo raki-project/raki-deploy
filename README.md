@@ -28,6 +28,9 @@ Start the application by running:
 ```bash
 docker-compose up
 ```
+# GUI
+
+Open in your browser: http://localhost:9081/
 
 # Example Request
 
