@@ -1,6 +1,6 @@
 [1]: https://github.com/dice-group/RAKI-Drill-Endpoint
 
-# Deploy
+# Clone and Deploy
 <!---
 ## Build the DRILL Docker image
 
@@ -13,10 +13,23 @@ Run: `docker build -t raki-webapp:latest "."`.
 
 # Start
 -->
+```bash
+git clone --recurse-submodules https://github.com/raki-project/raki-deploy.git && cd raki-deploy/drill && unzip LPs.zip && cd ..
+docker-compose build
 
-Start the application by running: `docker-compose up`.
+```
 
-# Example request
+<!---
+`git submodule update --init --recursive`
+-->
+
+# Start
+Start the application by running:
+```bash
+docker-compose up
+```
+
+# Example Request
 
 A request has two parameters.
 One with an input file (e.g., `input.json`) that contains an input for Drill as described in [Drill][1]
