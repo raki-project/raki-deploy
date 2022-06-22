@@ -5,9 +5,9 @@ services:
     build:
       context: drill
     environment:
-      - KG=Biopax/biopax.owl
-      - EMBEDDINGS=ConEx_Biopax/ConEx_entity_embeddings.csv
-      - PRE_TRAINED_AGENT=Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth
+      - KG=KGs/Biopax/biopax.owl
+      - EMBEDDINGS=embeddings/ConEx_Biopax/ConEx_entity_embeddings.csv
+      - PRE_TRAINED_AGENT=pre_trained_agents/Biopax/DrillHeuristic_averaging/DrillHeuristic_averaging.pth
     image: drill:latest
     ports:
       - "9080:9080"
