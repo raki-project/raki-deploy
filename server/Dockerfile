@@ -61,8 +61,8 @@ RUN cd raki-ui \
 
 ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki/.m2/repository -Dmaven.home=/usr/share/maven"
 
-RUN cd raki-verbalizer && ./mavenInstall.sh  \
- && cd raki-verbalizer-pipeline && ./mavenInstall.sh \
+RUN cd raki-verbalizer && ./mavenInstall.sh  && cd ..\
+ && cd raki-verbalizer-pipeline && ./mavenInstall.sh && cd .. \
  && ./mavenCompile.sh 
 
 #
