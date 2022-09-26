@@ -59,11 +59,13 @@ RUN cd raki-ui \
  && cd .. \
  && cp -r ./raki-ui/dist/raki-ui/* ./src/main/resources/static
 
+COPY ./ontology/* ./src/main/resources/static/ontology/
+
 ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki/.m2/repository -Dmaven.home=/usr/share/maven"
 
 RUN cd raki-verbalizer && ./mavenInstall.sh  && cd ..\
  && cd raki-verbalizer-pipeline && ./mavenInstall.sh && cd .. \
- && ./mavenCompile.sh 
+ && ./mavenCompile.sh
 
 #
 #
