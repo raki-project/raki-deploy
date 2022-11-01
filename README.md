@@ -30,7 +30,8 @@ sudo docker compose up
 ```
 
 ## Deploy with your Data
-Update the `docker-compose.yml` file and add your data to the drill service build environment.
+For Drill: update the `docker-compose.yml` file and add your data to the Drill service build environment.
+For the Verbalizer: copy your ontology to the `server/ontology` folder.
 
 ## Endpoints
 
