@@ -3,12 +3,8 @@
 # RAKI Demo
 
 ## Deploy
-Deploys the RAKI Demo for the Biopax data.
-Read [Deploy with your data](#deploy-with-your-data) to deploy the RAKI Demo for other data.
-
-
-### My Multi Word Header
-
+Deploys the RAKI Demo with the Biopax data.
+Read [deploy with your data](#deploy-with-your-data) to deploy the RAKI Demo with other data.
 
 ### Clone
 Clones this repository to your local folder: `raki-deploy`.
@@ -42,9 +38,9 @@ Update the `docker-compose.yml` file and add your data to the drill service buil
 Send a HTTP GET request without parameters to get information about your application to http://localhost:9081/info.
 
 ### /raki
-Send a HTTP POST request that requires 2 parameters to http://localhost:9081/raki
+Send a HTTP POST request that requires two parameters to http://localhost:9081/raki
 
-The 2 parameters are:
+The two parameters are:
 - `input` A JSON file that contains an input for Drill as described in [Drill][1],
 
 - `ontology` A RDF/OWL file, an ontology.
@@ -54,9 +50,9 @@ The parameter `type` with the value `model` will switch to the trained network i
 
 ### /verbalize
 
-Send a HTTP POST request that requires 2 parameters to http://localhost:9081/verbalize
+Send a HTTP POST request that requires two parameters to http://localhost:9081/verbalize
 
-The 2 parameters are:
+The two parameters are:
 - `axioms` A RDF/OWL file to verbalize.
 
 - `ontology` A RDF/OWL file, an ontology.
