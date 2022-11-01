@@ -1,43 +1,70 @@
 [1]: https://github.com/dice-group/RAKI-Drill-Endpoint
 
-# Clone and Deploy
-<!---
-## Build the DRILL Docker image
+# RAKI Demo
 
-Follow  the documentation in
-[Drill][1] and name the image `drill`.
+## Deploy
+Deploys the RAKI Demo for the Biopax data.
+Read [Deploy with your data](#deploy-with-your-data) to deploy the RAKI Demo for other data.
 
-## Build the Verbalizer Docker image
 
-Run: `docker build -t raki-webapp:latest "."`.
+### My Multi Word Header
 
-# Start
--->
+
+### Clone
+Clones this repository to your local folder: `raki-deploy`.
+
 ```bash
-git clone --recurse-submodules https://github.com/raki-project/raki-deploy.git && cd raki-deploy/drill && unzip LPs.zip && cd ..
-docker-compose build
+git clone --recurse-submodules https://github.com/raki-project/raki-deploy.git
+```
+
+### Build
+Builds your application in your local folder.
+
+```bash
+cd drill && unzip LPs.zip
+sudo docker compose build
 
 ```
 
-<!---
-`git submodule update --init --recursive`
--->
+### Start
+Starts your application:
 
-# Start
-Start the application by running:
 ```bash
-docker-compose up
+sudo docker compose up
 ```
-# GUI
 
-Open in your browser: http://localhost:9081/
+## Deploy with your Data
+Update the `docker-compose.yml` file and add your data to the drill service build environment.
 
-# Example Request
+## Endpoints
 
-A request has two parameters.
-One with an input file (e.g., `input.json`) that contains an input for Drill as described in [Drill][1]
-and another parameter with a file (e.g., `biopax.owl`) that contains an ontology.
+###  /info
+Send a HTTP GET request without parameters to get information about your application to http://localhost:9081/info.
 
+### /raki
+Send a HTTP POST request that requires 2 parameters to http://localhost:9081/raki
+
+The 2 parameters are:
+- `input` A JSON file that contains an input for Drill as described in [Drill][1],
+
+- `ontology` A RDF/OWL file, an ontology.
+
+By default the rule-based verbalizer is set.
+The parameter `type` with the value `model` will switch to the trained network in the beta version (e.g., `http://localhost:9081/raki?type=model`).  
+
+### /verbalize
+
+Send a HTTP POST request that requires 2 parameters to http://localhost:9081/verbalize
+
+The 2 parameters are:
+- `axioms` A RDF/OWL file to verbalize.
+
+- `ontology` A RDF/OWL file, an ontology.
+
+## GUI
+In your browser open http://localhost:9081/ to request the GUI.
+
+## Example
 An input can be created with, for instance:
 ```bash
 jq '
@@ -64,5 +91,3 @@ curl \
 	-o $response \
 	http://localhost:9081/raki
 ```
-
-By default the rule-based version is used. The parameter `type` with the value `model` will use the trained network in the beta version (e.g., `http://localhost:9081/raki?type=model`).  
