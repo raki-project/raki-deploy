@@ -70,7 +70,7 @@ RUN git clone -b v2 https://github.com/raki-project/raki-verbalizer.git verbaliz
 # pipeline-clone
 #
 FROM slim AS pipeline-clone
-RUN git clone -b v2.1 https://github.com/raki-project/raki-verbalizer-pipeline.git pipeline && cd pipeline && git checkout 59d516c
+RUN git clone -b v2.1 https://github.com/raki-project/raki-verbalizer-pipeline.git pipeline
 #
 # webapp-clone
 #
@@ -81,11 +81,6 @@ RUN git clone -b v2 https://github.com/raki-project/raki-webapp.git webapp
 #
 FROM slim AS ui-clone
 RUN git clone -b main https://github.com/raki-project/raki-ui.git raki-ui
-#
-# nmt-clone
-#
-FROM slim AS nmt-clone
-RUN git clone -b master https://github.com/OpenNMT/OpenNMT-py.git OpenNMT
 #
 # ui
 #
@@ -115,15 +110,10 @@ RUN cd webapp && \
 # final
 #
 FROM base AS final
+RUN conda create --quiet --yes --name openNMT2 python=3.9 \
+  && conda run --name openNMT2 pip install OpenNMT-py==2.3.0
+
 COPY --from=model demo ./demo
-COPY --from=nmt-clone OpenNMT ./OpenNMT
-
-RUN cd OpenNMT  \
- && conda create --quiet --yes --name openNMT2 python=3.9 \
- && conda run --name openNMT2 pip install -e .  \
- && conda run --name openNMT2 pip install -r requirements.opt.txt \
- && conda run --name openNMT2 python setup.py install
-
 COPY --from=builder /usr/bin/raki/.m2 ./.m2
 COPY --from=builder /usr/bin/raki/webapp/target ./target
 COPY --from=builder /usr/bin/raki/webapp/pom.xml ./
