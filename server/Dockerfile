@@ -1,14 +1,6 @@
 FROM debian:11-slim as slim
 RUN apt-get update && apt-get install -y unzip wget git
 #
-# m2
-#
-# FROM slim AS m2
-# RUN mkdir -p /.m2/repository && \
-#   wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/m2_20220208.zip --no-check-certificate && \
-#   unzip m2_20220208.zip && \
-#   rm m2_20220208.zip
-#
 # model
 #
 FROM slim AS model
@@ -46,41 +38,31 @@ RUN wget \
 
 RUN mkdir -p /usr/bin/raki
 WORKDIR /usr/bin/raki
-ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki/.m2/repository -Dmaven.home=/usr/share/maven"
+ENV MAVEN_OPTS "-Xmx8G -Dmaven.repo.local=/usr/bin/raki/.m2/repository"
 RUN mkdir -p /.m2/repository && \
   wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/m2_20220208.zip --no-check-certificate && \
   unzip m2_20220208.zip && \
   rm m2_20220208.zip
-RUN echo \
-   "<settings xmlns='http://maven.apache.org/SETTINGS/1.0.0\' \
-   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' \
-   xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd'> \
-       <localRepository>/usr/bin/raki/.m2/repository</localRepository> \
-       <interactiveMode>true</interactiveMode> \
-       <usePluginRegistry>false</usePluginRegistry> \
-       <offline>true</offline> \
-   </settings>" \
-   > /usr/share/maven/conf/settings.xml;
 #
 # verbalizer-clone
 #
 FROM slim AS verbalizer-clone
-RUN git clone -b v2 https://github.com/raki-project/raki-verbalizer.git verbalizer
+RUN git clone https://github.com/raki-project/raki-verbalizer.git verbalizer
 #
 # pipeline-clone
 #
 FROM slim AS pipeline-clone
-RUN git clone -b v2.1 https://github.com/raki-project/raki-verbalizer-pipeline.git pipeline
+RUN git clone https://github.com/raki-project/raki-verbalizer-pipeline.git pipeline
 #
 # webapp-clone
 #
 FROM slim AS webapp-clone
-RUN git clone -b v2 https://github.com/raki-project/raki-webapp.git webapp
+RUN git clone https://github.com/raki-project/raki-webapp.git webapp
 #
 # ui-clone
 #
 FROM slim AS ui-clone
-RUN git clone -b main https://github.com/raki-project/raki-ui.git raki-ui
+RUN git clone https://github.com/raki-project/raki-ui.git raki-ui
 #
 # ui
 #
@@ -95,17 +77,17 @@ RUN cd raki-ui \
 FROM base AS builder
 COPY --from=verbalizer-clone verbalizer ./verbalizer
 RUN cd verbalizer && \
-  mvn -T 1C compile install  -pl owl2nl -am -DskipTests -Dmaven.repo.local=/usr/bin/raki/.m2/repository
+  mvn -T 1C install -pl owl2nl -o -am -B -Dmaven.repo.local=/usr/bin/raki/.m2/repository
 
 COPY --from=pipeline-clone pipeline ./pipeline
 RUN cd pipeline && \
-  mvn -T 1C install  -am -DskipTests -Dmaven.repo.local=/usr/bin/raki/.m2/repository
+  mvn -T 1C install -am -B -Dmaven.repo.local=/usr/bin/raki/.m2/repository
 
 COPY --from=webapp-clone webapp ./webapp
 COPY ./ontology/* ./webapp/src/main/resources/static/ontology/
 COPY --from=ui raki-ui/dist/raki-ui/ ./webapp/src/main/resources/static/
 RUN cd webapp && \
-  mvn -T 1C compile install -am -DskipTests -Dmaven.repo.local=/usr/bin/raki/.m2/repository
+  mvn -T 1C compile -am -B -Dmaven.repo.local=/usr/bin/raki/.m2/repository
 #
 # final
 #
