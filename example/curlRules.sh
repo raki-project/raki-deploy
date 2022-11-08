@@ -16,4 +16,4 @@ curl \
 	-F axioms="@"$axioms \
 	-H "charset=utf-8" \
 	-o $response \
-	http://localhost:9081/verbalize
+	http://localhost:9081/rules

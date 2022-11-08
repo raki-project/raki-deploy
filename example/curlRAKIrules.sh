@@ -15,4 +15,4 @@ curl \
 	-F input=$input \
 	-H "charset=utf-8" \
 	-o $response \
-	http://localhost:9081/raki?type=rules
+	http://localhost:9081/raki
