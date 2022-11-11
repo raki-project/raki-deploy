@@ -78,7 +78,9 @@ curl \
 ```
 
 ## DRILL Endpoint
- [DRILL][1]
+Send a HTTP request to http://localhost:9080/concept_learning
+
+Details to parameters: [DRILL][1]
  
 ## OWL Verbalizer Endpoint
  
