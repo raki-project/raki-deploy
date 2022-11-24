@@ -4,9 +4,11 @@ RUN apt-get update && apt-get install -y unzip wget git
 # model
 #
 FROM slim AS model
-RUN mkdir demo && \
-  cd demo && \
-  wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/model_step_10000.pt --no-check-certificate
+RUN mkdir model && \
+  cd model && \
+  wget https://hobbitdata.informatik.uni-leipzig.de/RAKI/VerbalizerModel/model.zip --no-check-certificate  && \
+    unzip model.zip && \
+    rm model.zip
 #
 # base
 #
@@ -52,7 +54,7 @@ RUN git clone https://github.com/raki-project/raki-verbalizer.git verbalizer
 # pipeline-clone
 #
 FROM slim AS pipeline-clone
-RUN git clone https://github.com/raki-project/raki-verbalizer-pipeline.git pipeline
+RUN git clone https://github.com/raki-project/raki-verbalizer-pipeline.git pipeline && cd pipeline && git checkout v2.2
 #
 # webapp-clone
 #
@@ -92,14 +94,17 @@ RUN cd webapp && \
 # final
 #
 FROM base AS final
-RUN conda create --quiet --yes --name openNMT2 python=3.9 \
-  && conda run --name openNMT2 pip install OpenNMT-py==2.3.0
 
-COPY --from=model demo ./demo
+RUN conda create --quiet --yes --name rakiEnv python=3.9
+RUN conda run --name rakiEnv pip install sentencepiece==0.1.96 subword-nmt==0.3.7 OpenNMT-py==2.3.0
+SHELL ["conda", "run", "-n", "rakiEnv", "/bin/bash", "-c"]
+RUN conda run --name rakiEnv conda install  sentencepiece
+
+COPY --from=model model ./model
 COPY --from=builder /usr/bin/raki/.m2 ./.m2
 COPY --from=builder /usr/bin/raki/webapp/target ./target
 COPY --from=builder /usr/bin/raki/webapp/pom.xml ./
+COPY --from=builder /usr/bin/raki/pipeline/config.properties ./
 
 EXPOSE 9081
-
-ENTRYPOINT [ "mvn", "exec:java", "-Dmaven.repo.local=/usr/bin/raki/.m2/repository", "-Dexec.mainClass=org.dice_research.raki.verbalizer.webapp.ServiceApp"]
+ENTRYPOINT ["conda", "run", "-n", "rakiEnv", "mvn", "exec:java", "-Dmaven.repo.local=/usr/bin/raki/.m2/repository", "-Dexec.mainClass=org.dice_research.raki.verbalizer.webapp.ServiceApp"]
